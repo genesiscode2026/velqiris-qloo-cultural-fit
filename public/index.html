@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VELQIRIS Cultural Fit Agent</title>
+  <style>
+    :root { color-scheme: dark; --ink:#f3f4f6; --muted:#a5adba; --panel:#121827; --line:#2b354a; --accent:#7dd3fc; --ok:#86efac; --bad:#fca5a5; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; background:radial-gradient(circle at top right,#14344c 0,transparent 38%),#080c14; color:var(--ink); font:16px/1.5 Inter,ui-sans-serif,system-ui,sans-serif; }
+    main { width:min(980px,calc(100% - 32px)); margin:0 auto; padding:64px 0; }
+    .eyebrow { color:var(--accent); font-weight:700; letter-spacing:.14em; text-transform:uppercase; font-size:.78rem; }
+    h1 { max-width:760px; margin:.4rem 0 1rem; font-size:clamp(2.25rem,6vw,4.7rem); line-height:1; letter-spacing:-.05em; }
+    .lead { max-width:720px; color:var(--muted); font-size:1.12rem; }
+    .panel { margin-top:32px; padding:24px; border:1px solid var(--line); border-radius:18px; background:rgba(18,24,39,.88); box-shadow:0 24px 80px rgba(0,0,0,.35); }
+    form { display:grid; grid-template-columns:1.4fr 1fr auto; gap:12px; align-items:end; }
+    label { display:grid; gap:7px; color:var(--muted); font-size:.84rem; font-weight:650; }
+    input,select,button { width:100%; min-height:46px; border:1px solid var(--line); border-radius:10px; background:#0b101b; color:var(--ink); padding:0 13px; font:inherit; }
+    button { width:auto; background:var(--accent); color:#05121b; border-color:transparent; font-weight:800; cursor:pointer; padding:0 22px; }
+    button:disabled { opacity:.55; cursor:wait; }
+    #status { min-height:24px; margin:18px 0 0; color:var(--muted); }
+    #status.ok { color:var(--ok); } #status.error { color:var(--bad); }
+    .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-top:18px; }
+    article { border:1px solid var(--line); border-radius:12px; padding:16px; background:#0b101b; }
+    article h2 { margin:0 0 6px; font-size:1.05rem; } article p { margin:0; color:var(--muted); font-size:.88rem; overflow-wrap:anywhere; }
+    details { margin-top:20px; color:var(--muted); } pre { white-space:pre-wrap; overflow-wrap:anywhere; font-size:.78rem; }
+    .truth { margin-top:28px; padding-left:18px; color:var(--muted); }
+    @media (max-width:760px) { form { grid-template-columns:1fr; } button { width:100%; } main { padding-top:38px; } }
+  </style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">Qloo-powered · evidence first</div>
+  <h1>Cultural fit, grounded in a real taste graph.</h1>
+  <p class="lead">Choose a cultural seed and an output domain. The agent resolves the seed with Qloo Search, asks Qloo Insights for adjacent entities, and exposes its provenance. It does not fall back to invented recommendations.</p>
+  <section class="panel">
+    <form id="agent-form">
+      <label>Cultural seed<input id="seed" name="seed" value="Bauhaus" maxlength="120" required></label>
+      <label>Recommendation domain
+        <select id="output-type" name="outputType">
+          <option value="urn:entity:brand">Brands</option>
+          <option value="urn:entity:place">Places</option>
+          <option value="urn:entity:destination">Destinations</option>
+          <option value="urn:entity:movie">Movies</option>
+          <option value="urn:entity:artist">Artists</option>
+          <option value="urn:entity:book">Books</option>
+          <option value="urn:entity:podcast">Podcasts</option>
+          <option value="urn:entity:tv_show">TV shows</option>
+          <option value="urn:entity:video_game">Video games</option>
+          <option value="urn:entity:person">People</option>
+        </select>
+      </label>
+      <button id="run" type="submit">Ask Qloo</button>
+    </form>
+    <p id="status" role="status">Ready. Results appear only after verified Qloo responses.</p>
+    <div id="cards" class="cards"></div>
+    <details id="provenance" hidden><summary>Request provenance</summary><pre></pre></details>
+  </section>
+  <ul class="truth">
+    <li>Server-side API key; it is never returned to the browser.</li>
+    <li>Only documented <code>/search</code> and <code>/v2/insights</code> calls.</li>
+    <li>Fail-closed behavior when Qloo is unavailable or returns no entities.</li>
+  </ul>
+</main>
+<script>
+const form = document.querySelector('#agent-form');
+const button = document.querySelector('#run');
+const statusNode = document.querySelector('#status');
+const cards = document.querySelector('#cards');
+const provenance = document.querySelector('#provenance');
+form.addEventListener('submit', async (event) => {
+  event.preventDefault(); button.disabled = true; cards.replaceChildren(); provenance.hidden = true;
+  statusNode.className = ''; statusNode.textContent = 'Resolving the seed and requesting Qloo insights…';
+  try {
+    const response = await fetch('/.netlify/functions/cultural-fit', { method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({ seed:document.querySelector('#seed').value, outputType:document.querySelector('#output-type').value }) });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || data.error || `HTTP ${response.status}`);
+    for (const item of data.recommendations) {
+      const article = document.createElement('article');
+      const title = document.createElement('h2'); title.textContent = item.name;
+      const meta = document.createElement('p'); meta.textContent = item.type || item.id;
+      article.append(title,meta); cards.append(article);
+    }
+    statusNode.className = 'ok'; statusNode.textContent = `${data.recommendations.length} Qloo-grounded results for “${data.seed.query}”.`;
+    provenance.hidden = false; provenance.querySelector('pre').textContent = JSON.stringify(data.provenance,null,2);
+  } catch (error) {
+    statusNode.className = 'error'; statusNode.textContent = error.message;
+  } finally { button.disabled = false; }
+});
+</script>
+</body>
+</html>
+
