@@ -1,0 +1,16 @@
+{
+  "name": "velqiris-qloo-cultural-fit",
+  "version": "1.0.0",
+  "description": "VELQIRIS Cultural Taste & Affinity Intelligence via Qloo API",
+  "scripts": {
+    "test": "node --test test/cultural-fit.test.js"
+  },
+  "keywords": [
+    "qloo",
+    "taste-ai",
+    "cultural-intelligence",
+    "market-truth"
+  ],
+  "author": "VELQIRIS Acquisition",
+  "license": "MIT"
+}
