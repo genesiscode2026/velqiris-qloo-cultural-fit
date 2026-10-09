@@ -1,0 +1,72 @@
+{
+  "verified_at": "2026-10-09T16:48:45.094Z",
+  "api_server": "https://hackathon.api.qloo.com",
+  "api_key_fingerprint": "hack_85ca...a77f",
+  "status_code": 200,
+  "response": {
+    "status": "QLOO_VERIFIED",
+    "seed": {
+      "query": "Spotify",
+      "entityId": "99CBD9B1-F023-4034-97E7-E95A4A85BDD2"
+    },
+    "outputType": "urn:entity:podcast",
+    "recommendations": [
+      {
+        "id": "F52D25AF-779B-4B7C-B676-28995944AF8C",
+        "name": "Daebak Show w/ Eric Nam",
+        "type": "urn:entity",
+        "description": null
+      },
+      {
+        "id": "urn:tag:genre:media:music",
+        "name": "Music",
+        "type": "urn:tag:genre:media",
+        "description": null
+      },
+      {
+        "id": "urn:tag:genre:media:podcasts",
+        "name": "Podcasts",
+        "type": "urn:tag:genre:media",
+        "description": null
+      },
+      {
+        "id": "urn:tag:genre:media:music_commentary",
+        "name": "Music Commentary",
+        "type": "urn:tag:genre:media",
+        "description": null
+      },
+      {
+        "id": "B332477C-90DC-4D9D-9063-423B7E3E99C4",
+        "name": "The Tablo Podcast",
+        "type": "urn:entity",
+        "description": null
+      },
+      {
+        "id": "F683D388-785F-407A-8B41-A763542C95BC",
+        "name": "How Did I Get Here? w/ Jae and AleXa",
+        "type": "urn:entity",
+        "description": null
+      },
+      {
+        "id": "urn:tag:genre:media:society_culture",
+        "name": "Society & Culture",
+        "type": "urn:tag:genre:media",
+        "description": null
+      },
+      {
+        "id": "B8E920EB-C8FC-43AD-B3D5-7896FE49B114",
+        "name": "GET REAL S4 w/ Ashley, BM, JUNNY, and PENIEL",
+        "type": "urn:entity",
+        "description": null
+      }
+    ],
+    "provenance": {
+      "provider": "Qloo Taste AI",
+      "environment": "https://hackathon.api.qloo.com",
+      "search": "https://hackathon.api.qloo.com/search?query=Spotify",
+      "insights": "https://hackathon.api.qloo.com/v2/insights?filter.type=urn%3Aentity%3Apodcast&signal.interests.entities=99CBD9B1-F023-4034-97E7-E95A4A85BDD2",
+      "generatedAt": "2026-10-09T16:48:45.092Z"
+    }
+  },
+  "notes": "Verified live against Qloo Taste Graph Hackathon API without mocks."
+}

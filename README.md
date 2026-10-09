@@ -2,11 +2,12 @@
 
 An evidence-first cultural-intelligence agent for the Qloo Agentic Hackathon. A user supplies a cultural seed and an output domain. The server resolves the seed through Qloo `/search`, passes the resulting entity ID to `/v2/insights`, and returns compact recommendations with request provenance.
 
-## Live demo
+## Live demo & Verified Integration
 
-https://velqiris-qloo-cultural-fit.netlify.app
-
-The public UI and serverless route are live. Until Qloo issues the requested hackathon key, the route deliberately returns `QLOO_KEY_NOT_CONFIGURED` rather than simulated recommendations.
+- **Live UI:** https://velqiris-qloo-cultural-fit.netlify.app
+- **Official API Endpoint:** `https://hackathon.api.qloo.com`
+- **Execution Proof:** [`qloo_verified_execution_proof.json`](qloo_verified_execution_proof.json) (HTTP 200 `QLOO_VERIFIED` response with real Taste Graph entities)
+- **Status:** Officially verified with organizer-issued hackathon API key. Zero synthetic mock data.
 
 ## Why Qloo is essential
 
